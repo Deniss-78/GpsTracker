@@ -1,0 +1,64 @@
+//
+//  TrackersService.swift
+//  GpsTracker
+//
+//  Created by Denis Kravets on 22.01.2026.
+//
+
+import Foundation
+
+protocol TrackersService: AnyObject {
+    func fetchTrackers() async throws -> [Tracker]
+}
+
+final class RemoteTrackersService {
+    
+    private let apiClient: APIClient
+    private let authService: AuthService
+    
+    init(
+        apiClient: APIClient,
+        authService: AuthService
+    ) {
+        self.apiClient = apiClient
+        self.authService = authService
+    }
+}
+
+// MARK: TrackersService implementation
+
+extension RemoteTrackersService: TrackersService {
+    
+    func fetchTrackers() async throws -> [Tracker] {
+        do {
+            return try await fetchTrackersInternal()
+        } catch TrackersError.wrongHash {
+            authService.invalidateSession()
+            return try await fetchTrackersInternal()
+        }
+    }
+}
+
+// MARK: Private extensions
+
+private extension RemoteTrackersService {
+    
+    func fetchTrackersInternal() async throws -> [Tracker] {
+        let sessionHash = try await authService.validSessionHash()
+        
+        let response: TrackersResponse = try await apiClient.request(TrackersEndpoint.list(sessionHash: sessionHash))
+        
+        guard response.success else {
+            guard let status = response.status else {
+                throw TrackersError.invalidResponse
+            }
+            //  FIXME: replace APIErrorCode
+            if status.code == 3 {
+                throw TrackersError.wrongHash
+            }
+            throw TrackersError.server(status)
+        }
+        
+        return response.list.map(TrackerMapper.map)
+    }
+}
