@@ -1,0 +1,54 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "trackerDeviceID" : {
+      "comment" : "Label for the tracker device identifier field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "device ID"
+          }
+        }
+      }
+    },
+    "trackerModel" : {
+      "comment" : "Label for the tracker model field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "model"
+          }
+        }
+      }
+    },
+    "trackersTitle" : {
+      "comment" : "Navigation title for the list of GPS trackers",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trackers"
+          }
+        }
+      }
+    },
+    "unknown" : {
+      "comment" : "Fallback value used when data is missing or unavailable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unknown"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

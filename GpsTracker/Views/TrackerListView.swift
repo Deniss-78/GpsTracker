@@ -24,7 +24,7 @@ struct TrackerListView: View {
                     trackerView(tracker)
                 }
             }
-            .navigationTitle("Trackers")
+            .navigationTitle(Strings.trackersTitle.capitalizedFirst)
             .refreshable {
                 await viewModel.load()
             }

@@ -14,11 +14,11 @@ struct TrackerDetailsView: View {
     var body: some View {
         Form {
             TrackerInfoRow(
-                title: "Model",
+                title: Strings.trackerModel.capitalizedFirst,
                 value: tracker.model
             )
             TrackerInfoRow(
-                title: "Device ID",
+                title: Strings.trackerDeviceID.capitalizedFirst,
                 value: tracker.deviceID
             )
         }

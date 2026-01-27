@@ -12,8 +12,8 @@ enum NetworkLogger {
     static func logRequest(_ request: URLRequest) {
         print("----------")
         print("REQUEST:")
-        print("URL:", request.url?.absoluteString ?? "unknown")
-        print("METHOD:", request.httpMethod ?? "unknown")
+        print("URL:", request.url?.absoluteString ?? Strings.unknown)
+        print("METHOD:", request.httpMethod ?? Strings.unknown)
         
         if let body = request.httpBody,
            let bodyString = String(data: body, encoding: .utf8) {
