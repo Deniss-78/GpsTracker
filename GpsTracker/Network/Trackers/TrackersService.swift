@@ -52,13 +52,17 @@ private extension RemoteTrackersService {
             guard let status = response.status else {
                 throw TrackersError.invalidResponse
             }
-            //  FIXME: replace APIErrorCode
-            if status.code == 3 {
+            if let error = APIErrorCode(rawValue: status.code),
+               error == .wrongHash {
                 throw TrackersError.wrongHash
             }
             throw TrackersError.server(status)
         }
         
-        return response.list.map(TrackerMapper.map)
+        guard let list = response.list else {
+            throw TrackersError.invalidResponse
+        }
+        
+        return list.map(TrackerMapper.map)
     }
 }

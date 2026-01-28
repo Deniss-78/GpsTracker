@@ -16,7 +16,7 @@ enum TrackersEndpoint: Endpoint {
     }
     
     var method: HTTPMethod {
-        .post
+        .get
     }
     
     var queryItems: [URLQueryItem]? {

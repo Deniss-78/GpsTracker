@@ -7,6 +7,6 @@
 
 struct TrackersResponse: Decodable {
     let success: Bool
-    let list: [TrackerDTO]
+    let list: [TrackerDTO]?
     let status: APIError?
 }

@@ -31,7 +31,6 @@ final class RemoteAuthService {
 extension RemoteAuthService: AuthService {
     
     func validSessionHash() async throws -> String {
-        
         guard let validHash = sessionStorage.sessionHash else {
             return try await authenticate()
         }
@@ -57,7 +56,12 @@ private extension RemoteAuthService {
             throw AuthError.invalidResponse
         }
         
-        sessionStorage.save(sessionHash: response.hash)
-        return response.hash
+        guard let hash = response.hash?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !hash.isEmpty else {
+            throw AuthError.invalidResponse
+        }
+        
+        sessionStorage.save(sessionHash: hash)
+        return hash
     }
 }

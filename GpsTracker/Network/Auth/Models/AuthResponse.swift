@@ -7,6 +7,6 @@
 
 struct AuthResponse: Decodable {
     let success: Bool
-    let hash: String
+    let hash: String?
     let status: APIError?
 }
