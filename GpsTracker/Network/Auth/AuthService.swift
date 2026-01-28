@@ -47,21 +47,40 @@ extension RemoteAuthService: AuthService {
 private extension RemoteAuthService {
     
     func authenticate() async throws -> String {
-        let response: AuthResponse = try await apiClient.request(AuthEndpoint.authenticate)
-        
-        guard response.success else {
-            if let status = response.status {
-                throw AuthError.server(status)
+        do {
+            let response: AuthResponse = try await apiClient.request(AuthEndpoint.authenticate)
+            
+            guard response.success else {
+                if let status = response.status {
+                    throw AuthError.server(status)
+                }
+                throw AuthError.invalidResponse
             }
-            throw AuthError.invalidResponse
+            
+            guard let hash = response.hash?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !hash.isEmpty else {
+                throw AuthError.invalidResponse
+            }
+            
+            sessionStorage.save(sessionHash: hash)
+            return hash
+            
+        } catch let error as NetworkError {
+            throw mapNetworkError(error)
         }
         
-        guard let hash = response.hash?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !hash.isEmpty else {
-            throw AuthError.invalidResponse
+    }
+    
+    func mapNetworkError(_ error: NetworkError) -> AuthError {
+        switch error {
+        case .invalidURL, .invalidResponse, .decoding:
+            return .invalidResponse
+            
+        case .http(_, let data):
+            if let apiError = try? JSONDecoder().decode(AuthResponse.self, from: data).status {
+                return .server(apiError)
+            }
+            return .invalidResponse
         }
-        
-        sessionStorage.save(sessionHash: hash)
-        return hash
     }
 }

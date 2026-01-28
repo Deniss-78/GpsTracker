@@ -8,6 +8,11 @@
 import Foundation
 
 enum Strings {
+    static let commonError = String(localized: "commonError")
+    static let commonOk = String(localized: "commonOk")
+    static let error = String(localized: "error")
+    static let invalidServerResponse = String(localized: "invalidServerResponse")
+    static let sessionExpired = String(localized: "sessionExpired")
     static let trackerDeviceID = String(localized: "trackerDeviceID")
     static let trackerModel = String(localized: "trackerModel")
     static let trackersTitle = String(localized: "trackersTitle")

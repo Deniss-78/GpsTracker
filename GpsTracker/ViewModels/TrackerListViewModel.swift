@@ -13,13 +13,16 @@ final class TrackerListViewModel: ObservableObject {
     
     @Published private(set) var trackers: [Tracker] = []
     @Published private(set) var isLoading = false
-    @Published var errorMessage: String?
+    @Published private(set) var errorMessage: String?
     
     private let trackersService: TrackersService
     
     init(trackersService: TrackersService) {
         self.trackersService = trackersService
     }
+}
+
+extension TrackerListViewModel {
     
     func load() async {
         isLoading = true
@@ -28,10 +31,33 @@ final class TrackerListViewModel: ObservableObject {
         do {
             trackers = try await trackersService.fetchTrackers()
         } catch {
-            // in real application it's necessary to implement mapping an error for UI
-            errorMessage = error.localizedDescription
+            errorMessage = mapError(error)
         }
         
         isLoading = false
+    }
+    
+    func fetchErrorMessage() -> String {
+        errorMessage ?? Strings.commonError.capitalizedFirst
+    }
+    
+    func dismissError() {
+        errorMessage = nil
+    }
+    
+    func errorIsValid() -> Bool {
+        errorMessage != nil
+    }
+}
+
+// MARK: Private extensions
+
+private extension TrackerListViewModel {
+    
+    func mapError(_ error: Error) -> String {
+        guard let error = error as? ErrorRepresentable else {
+            return Strings.commonError.capitalizedFirst
+        }
+        return error.message
     }
 }

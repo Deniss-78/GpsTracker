@@ -37,6 +37,24 @@ struct TrackerListView: View {
                 guard viewModel.trackers.isEmpty else { return }
                 await viewModel.load()
             }
+            .alert(
+                Strings.error.capitalizedFirst,
+                isPresented: Binding(
+                    get: {
+                        viewModel.errorIsValid()
+                    },
+                    set: { _ in
+                        viewModel.dismissError()
+                    }
+                )
+            ) {
+                Button(
+                    Strings.commonOk,
+                    role: .cancel
+                ) {}
+            } message: {
+                Text(viewModel.fetchErrorMessage())
+            }
         }
     }
 }

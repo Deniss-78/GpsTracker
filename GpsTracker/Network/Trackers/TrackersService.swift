@@ -35,6 +35,8 @@ extension RemoteTrackersService: TrackersService {
         } catch TrackersError.wrongHash {
             authService.invalidateSession()
             return try await fetchTrackersInternal()
+        } catch let error as NetworkError {
+            throw mapNetworkError(error)
         }
     }
 }
@@ -64,5 +66,18 @@ private extension RemoteTrackersService {
         }
         
         return list.map(TrackerMapper.map)
+    }
+    
+    func mapNetworkError(_ error: NetworkError) -> TrackersError {
+        switch error {
+        case .invalidURL, .invalidResponse, .decoding:
+            return .invalidResponse
+            
+        case .http(_, let data):
+            if let apiError = try? JSONDecoder().decode(TrackersResponse.self, from: data).status {
+                return .server(apiError)
+            }
+            return .invalidResponse
+        }
     }
 }
