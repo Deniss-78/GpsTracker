@@ -15,6 +15,7 @@ enum Strings {
     static let sessionExpired = String(localized: "sessionExpired")
     static let trackerDeviceID = String(localized: "trackerDeviceID")
     static let trackerModel = String(localized: "trackerModel")
+    static let trackersEmptyDescription = String(localized: "trackersEmptyDescription")
     static let trackersTitle = String(localized: "trackersTitle")
     static let unknown = String(localized: "unknown")
 }

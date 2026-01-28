@@ -80,6 +80,18 @@
         }
       }
     },
+    "trackersEmptyDescription" : {
+      "comment" : "State when user’s trackers list is empty",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "you don’t have any trackers yet"
+          }
+        }
+      }
+    },
     "trackersTitle" : {
       "comment" : "Navigation title for the list of GPS trackers",
       "extractionState" : "manual",

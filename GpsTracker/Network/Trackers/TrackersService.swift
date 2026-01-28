@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TrackersService: AnyObject {
-    func fetchTrackers() async throws -> [Tracker]
+    func fetchTrackers() async throws -> [Tracker]?
 }
 
 final class RemoteTrackersService {
@@ -29,7 +29,7 @@ final class RemoteTrackersService {
 
 extension RemoteTrackersService: TrackersService {
     
-    func fetchTrackers() async throws -> [Tracker] {
+    func fetchTrackers() async throws -> [Tracker]? {
         do {
             return try await fetchTrackersInternal()
         } catch TrackersError.wrongHash {
@@ -45,7 +45,7 @@ extension RemoteTrackersService: TrackersService {
 
 private extension RemoteTrackersService {
     
-    func fetchTrackersInternal() async throws -> [Tracker] {
+    func fetchTrackersInternal() async throws -> [Tracker]? {
         let sessionHash = try await authService.validSessionHash()
         
         let response: TrackersResponse = try await apiClient.request(TrackersEndpoint.list(sessionHash: sessionHash))
@@ -61,11 +61,7 @@ private extension RemoteTrackersService {
             throw TrackersError.server(status)
         }
         
-        guard let list = response.list else {
-            throw TrackersError.invalidResponse
-        }
-        
-        return list.map(TrackerMapper.map)
+        return response.list?.map(TrackerMapper.map)
     }
     
     func mapNetworkError(_ error: NetworkError) -> TrackersError {

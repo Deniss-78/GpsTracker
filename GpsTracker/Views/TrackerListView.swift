@@ -17,7 +17,7 @@ struct TrackerListView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.trackers) { tracker in
+            List(viewModel.trackers ?? []) { tracker in
                 NavigationLink {
                     TrackerDetailsView(tracker: tracker)
                 } label: {
@@ -29,12 +29,15 @@ struct TrackerListView: View {
                 await viewModel.load()
             }
             .overlay {
-                if viewModel.isLoading && viewModel.trackers.isEmpty {
+                if viewModel.isLoading && viewModel.trackersIsEmpty() {
                     ProgressView()
+                } else if viewModel.showEmptyState() {
+                    Text(Strings.trackersEmptyDescription.capitalizedFirst)
+                        .font(.subheadline)
                 }
             }
             .task {
-                guard viewModel.trackers.isEmpty else { return }
+                guard viewModel.trackersIsEmpty() else { return }
                 await viewModel.load()
             }
             .alert(

@@ -11,7 +11,7 @@ import Foundation
 @MainActor
 final class TrackerListViewModel: ObservableObject {
     
-    @Published private(set) var trackers: [Tracker] = []
+    @Published private(set) var trackers: [Tracker]?
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     
@@ -35,6 +35,14 @@ extension TrackerListViewModel {
         }
         
         isLoading = false
+    }
+    
+    func trackersIsEmpty() -> Bool {
+        trackers == nil
+    }
+    
+    func showEmptyState() -> Bool {
+        trackers != nil && trackers?.isEmpty == true
     }
     
     func fetchErrorMessage() -> String {
